@@ -1,0 +1,142 @@
+create DATABASE HuongDanNauAn;
+create table LoaiUser(
+	MaLoaiUser int not null AUTO_INCREMENT,
+	TenLoaiUser nvarchar(20),
+	PRIMARY KEY(MaLoaiUser)
+	);
+create table Users(
+	TaiKhoan VARCHAR(20) PRIMARY KEY,
+	MatKhau VARCHAR(500),
+	MaLoaiUser int,
+	FOREIGN KEY (MaLoaiUser) REFERENCES LoaiUser(MaLoaiUser)
+);	
+	create table LoaiMonAn(
+		MaLoaiMonAn int  not null AUTO_INCREMENT,
+		TenLoaiMonAn nvarchar(100),
+		PRIMARY KEY (MaLoaiMonAn)
+		);
+	create table MonAn(
+		MaMonAn int not null AUTO_INCREMENT,
+		TenMonAn nvarchar(50),
+		MaDanhGia int,
+		MaNguyenLieu int,
+		MaLoaiMonAn int,
+		TaiKhoan VARCHAR(20),
+		QuocGia nvarchar(100),
+		DiemTB FLOAT DEFAULT 0,
+		AnhDaiDien nvarchar(30),
+		PRIMARY KEY (MaMonAN),
+		FOREIGN KEY (MaLoaiMonAn) REFERENCES LoaiMonAn(MaLoaiMonAn),
+		FOREIGN KEY (TaiKhoan) REFERENCES Users(TaiKhoan)
+		);
+	create table CongThuc (
+		MaCongThuc int  not null AUTO_INCREMENT,
+		ChiTiet nvarchar(2000),
+		MaMonAn int,
+		FOREIGN KEY (MaMonAn) REFERENCES MonAn(MaMonAn),
+		PRIMARY KEY (MaCongThuc)
+	);
+	create table DanhGia(
+	MaMonAn int,
+	TaiKhoan VARCHAR(20),
+	NoiDung nvarchar(500),
+	Diem float DEFAULT 0,
+	PRIMARY KEY(MaMonAN,TaiKhoan),
+	FOREIGN KEY (TaiKhoan) REFERENCES Users(TaiKhoan),
+	FOREIGN KEY (MaMonAn) REFERENCES MonAn(MaMonAn)
+	);
+create table NguyenLieu(
+MaNguyenLieu int not null AUTO_INCREMENT,
+TenNguyenLieu nvarchar(30),
+DonGia FLOAT,
+PRIMARY KEY(MaNguyenLieu)
+);
+create table ChiTietNguyenLieuMonAn(
+MaNguyenLieu int not null AUTO_INCREMENT,
+MaMonAn int,
+ChiTietNguyenLieu nvarchar(500),
+SoLuongNguyenLieu int,
+PRIMARY KEY (MaNguyenLieu,MaMonAn),
+FOREIGN KEY (MaMonAn) REFERENCES MonAn(MaMonAn),
+FOREIGN KEY (MaNguyenLieu) REFERENCES NguyenLieu(MaNguyenLieu)
+);
+CREATE TABLE Anh(
+	MaAnh int  not null AUTO_INCREMENT,
+	TenAnh nvarchar(30),
+	MaMonAn int,
+	PRIMARY KEY (MaAnh),
+	FOREIGN KEY (MaMonAn) REFERENCES MonAn(MaMonAn)
+);
+
+ALTER TABLE monan DROP COLUMN MaDanhGia;
+ALTER TABLE monan DROP COLUMN MaNguyenLieu;
+
+CREATE PROCEDURE ThemTaiKhoan(
+in TaiKhoan VARCHAR(20),
+in MatKhau VARCHAR (500),
+in LoaiTaiKhoan int)
+BEGIN
+	INSERT INTO users VALUES(TaiKhoan,MatKhau,LoaiTaiKhoan);
+END;
+
+
+INSERT INTO loaiuser(TenLoaiUser) VALUES (N'admin');
+INSERT INTO loaiuser(TenLoaiUser) VALUES (N'user');
+call ThemTaiKhoan('admin','admin',1);
+call ThemTaiKhoan('athelamsao','123456',2);
+
+
+INSERT INTO nguyenlieu(TenNguyenLieu,DonGia) VALUES(N'Ếch to (Ếch đồng)',20000);
+INSERT INTO nguyenlieu(TenNguyenLieu,DonGia) VALUES(N'Măng',7000);
+INSERT INTO nguyenlieu(TenNguyenLieu,DonGia) VALUES(N'Cơm Mẻ',5000);
+INSERT INTO nguyenlieu(TenNguyenLieu,DonGia) VALUES(N'Hành tím',3000);
+INSERT INTO nguyenlieu(TenNguyenLieu,DonGia) VALUES(N'Tỏi',3000);
+INSERT INTO nguyenlieu(TenNguyenLieu,DonGia) VALUES(N'Nghệ',1000);
+INSERT INTO nguyenlieu(TenNguyenLieu,DonGia) VALUES(N'Ơt Tươi',2000);
+INSERT INTO nguyenlieu(TenNguyenLieu,DonGia) VALUES(N'Mùi Tàu (Ngò gai)',20000);
+INSERT INTO nguyenlieu(TenNguyenLieu,DonGia) VALUES(N'Thịt Heo',18000);
+INSERT INTO nguyenlieu(TenNguyenLieu,DonGia) VALUES(N'Bột',5000);
+INSERT INTO nguyenlieu(TenNguyenLieu,DonGia) VALUES(N'Mì',5000);
+INSERT INTO nguyenlieu(TenNguyenLieu,DonGia) VALUES(N'Trứng',3500);
+INSERT INTO nguyenlieu(TenNguyenLieu,DonGia) VALUES(N'Lươn',6000);
+INSERT INTO nguyenlieu(TenNguyenLieu,DonGia) VALUES(N'Xả',1000);
+INSERT INTO nguyenlieu(TenNguyenLieu,DonGia) VALUES(N'Mật ong',1000);
+INSERT INTO nguyenlieu(TenNguyenLieu,DonGia) VALUES(N'Cơm',4500);
+
+
+INSERT INTO loaimonan(TenLoaiMonAn) VALUES(N'Xào');
+INSERT INTO loaimonan(TenLoaiMonAn) VALUES(N'Nướng');
+INSERT INTO loaimonan(TenLoaiMonAn) VALUES(N'Hấp');
+INSERT INTO loaimonan(TenLoaiMonAn) VALUES(N'Nấu');
+
+INSERT INTO monan(TenMonAn,MaLoaiMonAn,TaiKhoan,QuocGia,AnhDaiDien) VALUES (N'Ếch Xào Măng Cay',4,'admin','Việt Nam',N'/viet-nam/ech-xao-mang-cay.jpg');
+INSERT INTO monan(TenMonAn,MaLoaiMonAn,TaiKhoan,QuocGia,AnhDaiDien) VALUES (N'Ếch Xào Măng Cay',4,'admin','Việt Nam',N'/viet-nam/ech-xao-xa-ot.jpg');
+INSERT INTO monan(TenMonAn,MaLoaiMonAn,TaiKhoan,QuocGia,AnhDaiDien) VALUES (N'Unagi',4,'admin','Nhật Bản',N'/nhat-ban/unagi.jpg');
+
+-- ếch xào măng nguyên liệu
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (1,1,N'Con',4);
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (2,1,N'Gam',200);
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (3,1,N'Thìa ăn',2);
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (4,1,N'Củ',1);
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (5,1,N'Củ',2);
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (6,1,N'Củ',1);
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (7,1,N'Quả',2);
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (7,1,N'Mớ',1);
+
+
+-- ếch xào xả ơt nguyên liệu
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (1,2,N'Con',4);
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (3,2,N'Thìa ăn',2);
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (4,2,N'Củ',1);
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (5,2,N'Củ',2);
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (6,2,N'Củ',1);
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (7,2,N'Quả',2);
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (14,2,N'Nắm',1);
+
+-- Unagi nguyên liệu
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (13,3,N'Con',10);
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (3,3,N'Thìa ăn',2);
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (7,3,N'Quả',2);
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (15,3,N'Thìa',5);
+INSERT INTO chitietnguyenlieumonan(MaNguyenLieu,MaMonAn,ChiTietNguyenLieu,SoLuongNguyenLieu) VALUES (16,3,N'Bát',5);
+
